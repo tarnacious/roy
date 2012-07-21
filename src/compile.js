@@ -602,6 +602,16 @@ var nodeRepl = function(opts) {
                     }
                 }
                 break;
+            case ":r":
+                // Reload environment
+                env = {};
+                sources = {};
+                aliases = {};
+                sandbox = getSandbox();
+
+                prelude = fs.readFileSync(path.dirname(__dirname) + '/lib/prelude.roy', 'utf8');
+                vm.runInNewContext(compile(prelude, env, {}, {nodejs: true}).output, sandbox, 'eval');
+                break;
             case ":?":
                 // Help
                 colorLog(32, "Commands available from the prompt");
@@ -609,6 +619,7 @@ var nodeRepl = function(opts) {
                 console.log(":q -- exit REPL");
                 console.log(":s -- show original code about identifier");
                 console.log(":t -- show the type of the identifier");
+                console.log(":r -- reload the prelude environment");
                 console.log(":? -- show help");
                 break;
             default:
